@@ -1,30 +1,27 @@
-import React from 'react'
-import {NavigationContainer} from '@react-navigation/native'
-
+import React, { Component } from 'react'
 import Auth from './screens/Auth'
 import TaskList from './screens/TaskList'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-const MainRoutes = {
-    Auth: {
-        name: 'Auth',
-        screen: Auth
-    },
-    Home: {
-        name: 'Home',
-        screen: TaskList
-    }
-}
-
-
-
-const AppNavigator = props => {
-    const isAuth = useSelector(state => !!state.auth.access_token);
-
-    return (
+const Stack = createNativeStackNavigator()
+const isSignedIn = false
+export default class Navigator extends Component {
+    
+    render () {
+        
+        return(
         <NavigationContainer>
-            { isAuth && <MyCustomNavigator/>}
-            { !isAuth && <AuthNavigator/>}
-        </NavigationContainer>
-    );
-};
-export default AppNavigator;
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {isSignedIn ? (
+            // No token found, user isn't signed in
+            <Stack.Screen name="TaskList" component={TaskList}/>
+          ) : (
+            // User is signed in
+            <Stack.Screen name="Auth" component={Auth}/>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
+  }
+}

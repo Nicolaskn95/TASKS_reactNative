@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import commomStyles from '../commomStyles';
 import TodayImage from '../../assets/imgs/today.jpg'
+import tommorowImage from '../../assets/imgs/tomorrow.jpg'
+import weekImage from '../../assets/imgs/week.jpg'
+import monthImage from '../../assets/imgs/month.jpg'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment';
 import 'moment/locale/pt_br'
@@ -46,7 +49,9 @@ export default class TaskList extends Component {
 
     loadTasks = async() => {
         try {
-            const maxDate = moment().format('YYYY-MM-DD 23:59:59')
+            const maxDate = moment()
+            .add({days: this.props.daysAhead})
+            .format('YYYY-MM-DD 23:59:59')
             const res = await axios.get(`${server}/tasks?date=${maxDate}`)
             console.log('Dados recebidos do servidor:', res.data);
             this.setState({tasks: res.data}, this.filterTasks)
@@ -109,6 +114,24 @@ export default class TaskList extends Component {
         }
     }
 
+    getImage = () => {
+        switch(this.props.daysAhead) {
+            case 0: return TodayImage
+            case 1: return tommorowImage
+            case 7: return weekImage
+            default: return monthImage 
+        }
+    }
+
+    getColor = () => {
+        switch(this.props.daysAhead) {
+            case 0: return commomStyles.colors.today
+            case 1: return commomStyles.colors.tomorrow
+            case 7: return commomStyles.colors.week
+            default: return commomStyles.colors.month 
+        }
+    }
+    
     render() {
         
         const today = moment().locale('pt_br').format('ddd, D [de] MMMM')
@@ -119,7 +142,7 @@ export default class TaskList extends Component {
                 onCancel={() => this.setState({showAddTask: false})}
                 onSave={this.addTask}
             />
-            <ImageBackground source={TodayImage}
+            <ImageBackground source={this.getImage()}
                 style={styles.background}>
                 <View style={styles.iconBar}>
                     <TouchableOpacity onPress={this.toggleFilter}>
@@ -131,7 +154,7 @@ export default class TaskList extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.titleBar}>
-                    <Text style={styles.title}>Hoje</Text>
+                    <Text style={styles.title}>{this.props.title}</Text>
                     <Text style={styles.subtitle}>{today}</Text>
                 </View>
             </ImageBackground>
@@ -143,7 +166,7 @@ export default class TaskList extends Component {
                 />
             </View>
             <TouchableOpacity 
-                style={styles.addButton}
+                style={[styles.addButton, {backgroundColor: this.getColor()}]}
                 onPress={() => this.setState({showAddTask: true})}
                 activeOpacity={0.7}    
             >

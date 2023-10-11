@@ -16,8 +16,8 @@ import {
 } from 'react-native'
 
 const initialState= {
-    email: 'daniele@hotmail.com',
-    password: '123456',
+    email: '',
+    password: '',
     name: '',
     confirmPassword: '',
     stageNew: false
@@ -54,7 +54,6 @@ export default class Auth extends Component {
     }
 
     signin = async () => {
-        Alert.alert('Sucesso!', 'Logar')
         try {
             const res = await axios.post(`${server}/signin`, {
                 email: this.state.email,

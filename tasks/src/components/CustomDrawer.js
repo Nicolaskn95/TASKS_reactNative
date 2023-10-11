@@ -12,7 +12,7 @@ const CustomDrawer = (props) => {
     const logout = () => {
         delete axios.defaults.headers.common['Authorization']
         AsyncStorage.removeItem('userData')
-        props.navigation.navigate('AuthOrApp')
+        props.navigation.navigate('Auth')
     }
 
     return(

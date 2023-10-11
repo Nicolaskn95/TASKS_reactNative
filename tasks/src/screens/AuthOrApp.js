@@ -20,7 +20,7 @@ export default class AuthOrApp extends Component {
             //userData esta invalido
             //TODO:
         }
-
+        
         if (userData && userData.token) {
             axios.defaults.headers.common['Authorization'] = `bearer ${userData.token}`
             this.props.navigation.navigate('Drawer', userData)
